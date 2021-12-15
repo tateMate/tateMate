@@ -6,4 +6,6 @@ export const SearchBar = () => {
 
 const SearchBarContainer = styled.input`
   background-color: 400px;
+  width: 200px;
+  heignth: 100px;
 `;
