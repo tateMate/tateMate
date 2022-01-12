@@ -173,7 +173,9 @@ public class UserService {
 		}
 		int rst = userDAO.modifyUser(userVO);
 		if(session != null) {
-			session.setAttribute("user", userDAO.selectUserByUserId(userVO.getUser_id()));
+			UserVO modifiedUser = userDAO.selectUserByUserId(userVO.getUser_id());
+			modifiedUser.setUser_pw("");
+			session.setAttribute("user", modifiedUser);
 			session.setAttribute("userCharacter", userCharacterVO);
 		}
 		return rst;
@@ -251,6 +253,7 @@ public class UserService {
 		int userChatter = userCharacter.getChatter();
 		int userSnoring = userCharacter.getSnoring();
 		for (UserVO nearbyUser : nearbyUserList) {
+			nearbyUser.setUser_pw("");
 			UserCharacterVO nearbyUserCharacter = userCharacterDAO.selectUserCharacterByUserId(nearbyUser.getUser_id());
 			if(nearbyUserCharacter == null || nearbyUser.getUser_id() == user_id) continue;
 			int nearbyUserCleanLiness = nearbyUserCharacter.getCleanliness();

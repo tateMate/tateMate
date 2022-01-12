@@ -229,7 +229,7 @@ public class TestController2 {
 	
 	//회원가입 페이지
 	@GetMapping("/realjoin")
-	public String realjoin(String tatemate, Model model) {
+	public String realjoin(@RequestParam(required = true)String tatemate, Model model) {
 		model.addAttribute("user",userService.selectUserByshalizedEmail(tatemate));
 		return "main/join";
 		/*
