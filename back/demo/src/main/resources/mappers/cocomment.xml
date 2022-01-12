@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.test.demo.dao.CocommentDAO">
+<!-- 대댓글 아이디로 특정 대댓글을 1개 받아옴 -->
+	<select id = "selectCocommentByCocommentId" resultType="CocommentVO" parameterType="int">
+		SELECT * FROM cocomment
+		WHERE cocomment_id=#{cocomment_id}
+	</select>
+<!-- 대댓글 아이디로 특정 대댓글을 1개 받아옴(ver. nickname) -->
+	<select id = "selectNicknamedCocommentByCocommentId" resultType="NicknamedCocommentVO" parameterType="int">
+		SELECT coco.*, user.user_nickname AS cocomment_nickname_from
+		FROM 	cocomment AS coco
+		LEFT JOIN user
+		ON	coco.cocomment_id_from = user.user_id
+		WHERE cocomment_id=#{cocomment_id}
+	</select>
+	
+<!-- 댓글 아이디로 대댓글 목록을 받아옴 -->
+	<select id="selectCocommentByCommentId" resultType="CocommentVO" parameterType="int" >
+		SELECT * FROM cocomment
+		WHERE comment_id=#{comment_id}
+	</select>
+<!-- 댓글 아이디로 대댓글 목록을 받아옴(ver.nickname) -->
+	<select id="selectNicknamedCocommentByCommentId" resultType="NicknamedCocommentVO" parameterType="int" >
+		SELECT coco.*, user.user_nickname AS cocomment_nickname_from
+		FROM cocomment AS coco
+		LEFT JOIN user
+		ON coco.cocomment_id_from = user.user_id
+		WHERE comment_id=#{comment_id}
+		ORDER BY coco.cocomment_time ASC
+	</select>
+
+<!-- 대댓글 입력 -->
+	<insert id="insertCocomment" parameterType="CocommentVO">
+		INSERT INTO cocomment(cocomment_id,comment_id,cocomment_id_from,cocomment_contents,cocomment_time,cocomment_status)
+		VALUES(#{cocomment_id},#{comment_id},#{cocomment_id_from},#{cocomment_contents},#{cocomment_time},#{cocomment_status})
+	</insert>
+
+<!-- 대댓글 삭제하기(status를 2으로 바꿈) -->
+	<update id="deleteCocomment" parameterType="int">
+		UPDATE cocomment
+		SET cocomment_status=2
+		WHERE cocomment_id=#{cocomment_id}
+	</update>
+	
+<!-- 대댓글 수정하기(내용 수정) -->
+	<update id="modifyCocomment" parameterType="map">
+		UPDATE cocomment
+		SET cocomment_contents=#{cocomment_contents}, cocomment_time=#{cocomment_time}
+		WHERE cocomment_id=#{cocomment_id}
+	</update>
+</mapper>

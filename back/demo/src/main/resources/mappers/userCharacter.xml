@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.test.demo.dao.UserCharacterDAO">
+<!-- 유저 아이디로 특정 성향 1개를 받아옴 -->
+	<select id = "selectUserCharacterByUserId" resultType="UserCharacterVO" parameterType="int">
+		SELECT * FROM user_character
+		WHERE user_id=#{user_id}
+	</select>
+	
+<!-- 	유저 성향 수정 -->
+	<update id="modifyUserCharacter" parameterType="UserCharacterVO">
+		UPDATE USER_CHARACTER
+		SET cleanliness=#{cleanliness},wakeup_time=#{wakeup_time},sleep_time=#{sleep_time},cooking_frequency=#{cooking_frequency},chatter=#{chatter},snoring=#{snoring},mbti=#{mbti}
+		WHERE user_id=#{user_id}
+	</update>
+	
+<!-- 	recommend based on character -->
+	<select id="sameCharacter" resultType="int" parameterType="UserCharacterVO">
+		SELECT user_id
+<!-- 		 , ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) AS score -->
+		FROM user_character
+		WHERE user_id!=#{user_id}
+		ORDER BY ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring})
+		LIMIT 5
+	</select>
+
+<!--insert user character -->
+   <insert id="insertUserCharacter" parameterType="UserCharacterVO">
+      INSERT INTO USER_CHARACTER(user_id,cleanliness,wakeup_time,sleep_time,cooking_frequency,chatter,snoring,mbti)
+      VALUES ((SELECT LAST_INSERT_ID()),#{cleanliness},#{wakeup_time},#{sleep_time},#{cooking_frequency},#{chatter},#{snoring},#{mbti});
+   </insert>
+	
+	
+
+</mapper>
