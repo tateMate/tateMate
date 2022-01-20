@@ -16,12 +16,27 @@
 	
 <!-- 	recommend based on character -->
 	<select id="sameCharacter" resultType="int" parameterType="UserCharacterVO">
-		SELECT user_id
-<!-- 		 , ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) AS score -->
-		FROM user_character
-		WHERE user_id!=#{user_id}
+		<!-- user_location으로 근처유저 찾은 후, 성향차이 소트 -->
+		SELECT uc.user_id
+		FROM user_character AS uc
+		JOIN (SELECT user_id
+				FROM user
+				WHERE user_location LIKE CONCAT((SELECT SUBSTRING_INDEX(user_location,' ',2)
+															FROM user
+															WHERE user_id = #{user_id}),'%')) AS u
+		WHERE uc.user_id = u.user_id
+		AND uc.user_id!=#{user_id}
 		ORDER BY ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring})
-		LIMIT 5
+		
+		
+
+<!-- 		SELECT user_id -->
+<!-- 		 , ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) AS score -->
+<!-- 		FROM user_character -->
+<!-- 		WHERE user_id!=#{user_id} -->
+<!-- 		ORDER BY ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) -->
+<!-- 		LIMIT 5 -->
+
 	</select>
 
 <!--insert user character -->

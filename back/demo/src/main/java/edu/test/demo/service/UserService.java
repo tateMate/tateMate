@@ -228,6 +228,7 @@ public class UserService {
 	}
 
 //	recommend user mulgae version
+//	no longer used
 	public List<UserVO> rcmdUser(int user_id){		
 		List<UserVO> rcmdUserList = new ArrayList<>();		//	최종 추천 리스트		
 		UserVO user = userDAO.selectUserByUserId(user_id);

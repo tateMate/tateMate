@@ -93,7 +93,7 @@ public class MainController {
 	@GetMapping("/rcmd")
 	public List<UserVO> rcmdUserList(HttpServletRequest session){
 		if(session.getAttribute("user")!=null) {
-			return userService.rcmdUser(((UserVO)session.getAttribute("user")).getUser_id());
+			return userCharacterService.sameCharacter((UserCharacterVO)(session.getAttribute("userCharacter")));
 		}else return null;
 	}
 	
