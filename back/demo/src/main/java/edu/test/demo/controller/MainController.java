@@ -75,6 +75,7 @@ public class MainController {
 		if(user == null)
 			return false;
 		else {
+			user.setUser_pw("");
 			session.setAttribute("user", user);
 			session.setAttribute("userCharacter", userCharacterService.selectUserCharacterByUserId(user.getUser_id()));
 			return true;
@@ -92,7 +93,7 @@ public class MainController {
 	@GetMapping("/rcmd")
 	public List<UserVO> rcmdUserList(HttpServletRequest session){
 		if(session.getAttribute("user")!=null) {
-			return userService.rcmdUser(((UserVO)session.getAttribute("user")).getUser_id());
+			return userCharacterService.sameCharacter((UserCharacterVO)(session.getAttribute("userCharacter")));
 		}else return null;
 	}
 	
@@ -100,6 +101,7 @@ public class MainController {
 	@GetMapping("/userInfo")
 	public JSONObject userInfo(Integer user_id) {
 		UserVO user = userService.selectUserByUserId(user_id);
+		user.setUser_pw("");
 		UserCharacterVO userCharacter = userCharacterService.selectUserCharacterByUserId(user_id);
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("user", user);
