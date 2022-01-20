@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.test.demo.dao.UserDAO">
+<!-- 유저 선택(test) -->
+	<select id = "selectUser" resultType="UserVO">
+		SELECT * FROM user 
+	</select>
+
+<!-- user id로 user선택 -->	
+	<select id = "selectUserByUserId" resultType="UserVO" parameterType="int">
+		SELECT * FROM user 
+		WHERE user_id=#{user_id}
+	</select>
+
+<!-- user email로 user선택 -->	
+	<select id = "selectUserByUserEmail" resultType="UserVO" parameterType="String">
+		SELECT * FROM user 
+		WHERE user_email=#{user_email}
+	</select>
+
+	
+<!-- 회원가입 -->
+	<insert id="insertUser" parameterType="UserVO">
+		INSERT INTO user(user_pet,user_intro,user_ideal,user_location,user_sns,user_email,user_pw,user_nickname,user_gender,user_nationality,user_age,user_smoking,user_vaccine,user_room,user_matching,user_profile)
+		VALUES(#{user_pet},#{user_intro},#{user_ideal},#{user_location},#{user_sns},#{user_email},#{user_pw},#{user_nickname},#{user_gender},#{user_nationality},#{user_age},#{user_smoking},#{user_vaccine},#{user_room},#{user_matching},#{user_profile})  
+	</insert>
+	
+	
+	
+	
+	
+<!-- 새로운 회원가입 로직 -->
+	<insert id="insertTmpUser" parameterType="UserVO">
+		INSERT INTO USER(USER_PW,USER_EMAIL,USER_NICKNAME,USER_GENDER,USER_NATIONALITY,USER_AGE,USER_SMOKING,USER_VACCINE,USER_ROOM,USER_MATCHING)
+		VALUES(#{user_pw},#{user_email},"TMPUSER",0,"TMPUSER",1,0,1,0,0)
+	</insert>
+	
+	
+	
+	
+	
+
+<!-- 로그인 체크 -->
+	<select id="selectUserLogin" resultType="UserVO" parameterType="map">
+		SELECT * 
+		FROM user
+		WHERE user_email = #{user_email}
+		AND user_pw = #{user_pw}   
+	</select>
+	
+<!-- 	유저 수정 -->
+	<update id="modifyUser" parameterType="UserVO">
+		UPDATE USER
+		SET user_nickname=#{user_nickname},user_gender=#{user_gender},user_nationality=#{user_nationality},user_age=#{user_age},user_smoking=#{user_smoking},user_vaccine=#{user_vaccine}
+			,user_room=#{user_room},user_matching=#{user_matching},user_profile=#{user_profile},user_pet=#{user_pet},user_intro=#{user_intro},user_ideal=#{user_ideal},user_location=#{user_location},user_sns=#{user_sns}
+		WHERE user_id=#{user_id}
+	</update>
+	
+	
+<!-- email check -->
+	<select id = "emailCheck" resultType="UserVO"  parameterType="String">
+		SELECT * FROM user WHERE user_email = #{email}
+	</select>
+
+<!-- nickname check -->
+	<select id = "nicknameCheck" resultType="UserVO"  parameterType="String">
+		SELECT * FROM user WHERE user_nickname = #{nickname}
+	</select>
+	
+<!-- modify password -->
+	<update id="modifyPw" parameterType="map">
+		update user set user_email = #{user_email}, user_pw = #{pw} where user_id = #{user_id}
+	</update>
+
+<!-- select by password -->
+	<select id = "selectUserByUserPw" resultType="UserVO"  parameterType="String">
+		SELECT * FROM user WHERE user_pw  = #{user_pw}
+	</select>
+	
+<!-- select users by location -->
+	<select id = "selectUsersByLocation" resultType="UserVO"  parameterType="String">
+		SELECT * 
+		FROM user 
+		WHERE user_location like #{location}
+	</select>
+	
+	
+<!-- select 
+	<select id = "methodID" resultType="returnType"  parameterType="parameterType">
+		SELECT * FROM table WHERE admin_ID  = #{parameterName}
+	</select>
+-->
+
+	
+<!-- insert
+	<insert id="methodID" parameterType="parameterType">
+		INSERT INTO table(요소들)
+		VALUES(#{user_id}, #{book_id}, #{record_borrowdate}, #{record_duedate}, #{record_borrowby}) 
+	</insert>
+ -->
+	
+<!-- update 
+	<update id="methodID" parameterType="String">
+		update table set 요소 = 1 where 기본키 = #{book_id}
+	</update>
+-->
+	
+
+</mapper>
