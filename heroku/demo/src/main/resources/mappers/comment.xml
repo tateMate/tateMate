@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.test.demo.dao.CommentDAO">
+<!-- 댓글 아이디로 특정 댓글 1개를 받아옴 -->
+	<select id = "selectCommentByCommentId" resultType="CommentVO" parameterType="int">
+		SELECT * FROM comment
+		WHERE comment_id=#{comment_id}
+	</select>
+<!-- 댓글 아이디로 특정 댓글 1개를 받아옴 ver.nickname -->
+	<select id = "selectNicknamedCommentByCommentId" resultType="NicknamedCommentVO" parameterType="int">
+		SELECT sub.*, to_user.user_nickname AS comment_nickname_to
+		FROM (SELECT co.*, from_user.user_nickname AS comment_nickname_from
+		FROM comment AS co
+		LEFT JOIN user AS from_user
+		ON co.comment_id_from = from_user.user_id
+		WHERE comment_id=#{comment_id}) AS sub
+		LEFT JOIN user AS to_user
+		ON comment_id_to = to_user.user_id
+	</select>
+	
+<!-- 댓글을 받는 사람 아이디로 댓글 목록을 가져옴 -->
+	<select id="selectCommentByCommentIdTo" resultType="CommentVO" parameterType="int" >
+		SELECT * FROM comment
+		WHERE comment_id_to=#{comment_id_to}
+<!-- 		AND comment_status=0 -->
+	</select>
+<!-- 댓글을 받는 사람 아이디로 댓글 목록을 가져옴 ver.nickname -->
+	<select id="selectNicknamedCommentByCommentIdTo" resultType="NicknamedCommentVO" parameterType="int" >
+		SELECT sub.*, to_user.user_nickname AS comment_nickname_to
+		FROM (SELECT co.*, from_user.user_nickname AS comment_nickname_from
+		FROM comment AS co
+		LEFT JOIN user AS from_user
+		ON co.comment_id_from = from_user.user_id
+		WHERE comment_id_to=#{comment_id_to}) AS sub
+		LEFT JOIN user AS to_user
+		ON comment_id_to = to_user.user_id
+		ORDER BY sub.comment_time ASC
+	</select>
+	
+<!-- 댓글 입력 -->
+	<insert id="insertComment" parameterType="CommentVO" >
+		INSERT INTO comment(comment_id, comment_id_to, comment_id_from, comment_contents, comment_time, comment_access, comment_status)
+		VALUES(#{comment_id},#{comment_id_to},#{comment_id_from},#{comment_contents},#{comment_time},#{comment_access},#{comment_status})
+	</insert>
+	
+<!-- 댓글 삭제하기(status를 2으로 바꿈) -->
+	<update id="deleteComment" parameterType="int">
+		UPDATE comment
+		SET comment_status=2
+		WHERE comment_id=#{comment_id}
+	</update>
+
+<!-- 댓글 수정하기(내용 수정) -->
+	<update id="modifyComment" parameterType="map">
+		UPDATE comment
+		SET comment_contents=#{comment_contents}, comment_time=#{comment_time}
+		WHERE comment_id=#{comment_id}
+	</update>
+
+</mapper>
