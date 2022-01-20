@@ -1,7 +1,7 @@
 import { Card } from '../ui/card/Card';
-import { NavBar } from '../ui/navbar/Navbar';
 import { SearchBar } from '../ui/searchBar/SearchBar';
 import styled from 'styled-components';
+import NavBar from '../ui/navbar/Navbar.component';
 
 const Main = () => {
   return (
