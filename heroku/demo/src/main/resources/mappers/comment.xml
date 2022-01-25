@@ -56,5 +56,4 @@
 		SET comment_contents=#{comment_contents}, comment_time=#{comment_time}
 		WHERE comment_id=#{comment_id}
 	</update>
-
 </mapper>

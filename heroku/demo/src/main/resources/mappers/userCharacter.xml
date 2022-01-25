@@ -9,7 +9,7 @@
 	
 <!-- 	유저 성향 수정 -->
 	<update id="modifyUserCharacter" parameterType="UserCharacterVO">
-		UPDATE USER_CHARACTER
+		UPDATE user_character
 		SET cleanliness=#{cleanliness},wakeup_time=#{wakeup_time},sleep_time=#{sleep_time},cooking_frequency=#{cooking_frequency},chatter=#{chatter},snoring=#{snoring},mbti=#{mbti}
 		WHERE user_id=#{user_id}
 	</update>
@@ -30,18 +30,11 @@
 		
 		
 
-<!-- 		SELECT user_id -->
-<!-- 		 , ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) AS score -->
-<!-- 		FROM user_character -->
-<!-- 		WHERE user_id!=#{user_id} -->
-<!-- 		ORDER BY ABS(cleanliness-#{cleanliness})+ABS(wakeup_time-#{wakeup_time})+ABS(sleep_time-#{sleep_time})+ABS(cooking_frequency-#{cooking_frequency})+ABS(chatter-#{chatter})+ABS(snoring-#{snoring}) -->
-<!-- 		LIMIT 5 -->
-
 	</select>
 
 <!--insert user character -->
    <insert id="insertUserCharacter" parameterType="UserCharacterVO">
-      INSERT INTO USER_CHARACTER(user_id,cleanliness,wakeup_time,sleep_time,cooking_frequency,chatter,snoring,mbti)
+      INSERT INTO user_character(user_id,cleanliness,wakeup_time,sleep_time,cooking_frequency,chatter,snoring,mbti)
       VALUES ((SELECT LAST_INSERT_ID()),#{cleanliness},#{wakeup_time},#{sleep_time},#{cooking_frequency},#{chatter},#{snoring},#{mbti});
    </insert>
 	
