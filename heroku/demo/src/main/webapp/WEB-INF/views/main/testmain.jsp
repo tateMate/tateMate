@@ -28,6 +28,7 @@ div:hover{
 	<a href="https://tatemate-back.herokuapp.com/forgotPw">비밀번호 찾기</a><br>
 	<a href="https://tatemate-back.herokuapp.com/newjoin">**NEW LOGIN LOGIC**</a><br>
 	<textarea></textarea>
+	
 	<hr>
 		<h1 style="font-size:150px;">TATEMATE</h1>
 		<h6>따떼마떼</h6>

@@ -37,14 +37,14 @@ public class MainController {
 	
 	//가입 url 전송
 	@PostMapping("/join/sendURL")
-	public boolean sendURL(String user_email){
+	public String sendURL(String user_email){
 		try {
 			userService.insertTmpUser(user_email);
-			return true;
+			return "TRUE";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return user_email;
 		}
 		
 	}

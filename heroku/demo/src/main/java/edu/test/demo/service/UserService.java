@@ -32,12 +32,9 @@ public class UserService {
 	
 //Sending Email Process	
 	public void sendEmail(String user_email, String purpose, String url) throws Exception {
-		File securityFile=new File("C://security.txt");
-		Scanner sc=new Scanner(securityFile);
-		final String FROM=sc.nextLine();
-		final String SMTP_PASSWORD=sc.nextLine();
+		final String FROM=System.getenv("SC_MAIL_ID");
+		final String SMTP_PASSWORD=System.getenv("SC_MAIL_PW");
 		final String SMTP_USERNAME=FROM;
-		sc.close();
 		final String FROMNAME="TATEMATE";
 		final String HOST="smtp.gmail.com";
 		final int PORT=587;
@@ -124,7 +121,7 @@ public class UserService {
 		vo.setUser_email(shalize("tatemate"+param));
 		userDAO.insertTmpUser(vo);
 		userCharacterDAO.insertUserCharacter(new UserCharacterVO());
-		sendEmail(user_email, "join", "http://localhost:8080/realjoin?tatemate="+param);
+		sendEmail(user_email, "join", "https://tatemate-back.herokuapp.com/realjoin?tatemate="+param);
 		return param;
 	}
 	
@@ -290,7 +287,7 @@ public class UserService {
 		String pw = user.getUser_pw();
 		String time = LocalDateTime.now().toString();
 		String tmpPw = shalize(email+pw+time);									//	tmp password 
-		String pwModifyURL = "http://localhost:8080/modifyPw?tmpPw="+tmpPw;		//	URL
+		String pwModifyURL = "https://tatemate-back.herokuapp.com/modifyPw?tmpPw="+tmpPw;		//	URL
 		Map<String, Object> emailPass = new HashMap<>();						//	map for sqlMapper
 		emailPass.put("user_id", user_id);	
 		emailPass.put("user_email", email);	
