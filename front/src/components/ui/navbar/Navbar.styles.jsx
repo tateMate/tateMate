@@ -8,6 +8,8 @@ export const ToggleContainer = styled.div`
 export const ToggleBtn = styled.button`
   margin: 5px 0;
   background: none;
+  position: absolute;
+  z-index: 10;
   border: none;
   cursor: pointer;
 `;
@@ -19,14 +21,7 @@ export const NavContainer = styled.aside`
   background-color: #faf2d5;
   position: fixed;
   display: flex;
-  transform: translate(0);
-  transition: 200ms ease;
-  ${(isNavOpen) => {
-    isNavOpen &&
-      css`
-        transform: translate(0);
-      `;
-  }}
+
   > ul {
     list-style: none;
   }

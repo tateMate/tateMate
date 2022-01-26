@@ -19,7 +19,7 @@ const NavBar = (props) => {
         mountOnEnter
         unmountOnExit
       >
-        <NavContainer isNavOpen={isNavOpen}>
+        <NavContainer>
           <ToggleContainer />
           {props.children}
         </NavContainer>
