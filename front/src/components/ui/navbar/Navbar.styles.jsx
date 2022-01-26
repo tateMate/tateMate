@@ -12,7 +12,7 @@ export const ToggleBtn = styled.button`
   cursor: pointer;
 `;
 
-export const NavContainer = styled.nav`
+export const NavContainer = styled.aside`
   width: 20%;
   height: 100%;
   margin-top: 0;
