@@ -13,22 +13,19 @@ export const ToggleBtn = styled.button`
 `;
 
 export const NavContainer = styled.nav`
-  width: 100%;
+  width: 20%;
+  height: 100%;
   margin-top: 0;
   background-color: #faf2d5;
   position: fixed;
   display: flex;
+  transform: translate(0);
   transition: 200ms ease;
   ${(isNavOpen) => {
-    !isNavOpen
-      ? css`
-          width: 0;
-          height: 0;
-        `
-      : css`
-          width: 400px;
-          height: 100vh;
-        `;
+    isNavOpen &&
+      css`
+        transform: translate(0);
+      `;
   }}
   > ul {
     list-style: none;

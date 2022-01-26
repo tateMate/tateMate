@@ -14,16 +14,6 @@ import { Link } from 'react-router-dom';
 const IntroPage = () => {
   return (
     <IntroContainer>
-      <NavBar>
-        <ul>
-          <li>
-            <Link to='/search-mate'>룸메 찾기</Link>
-          </li>
-          <li>
-            <Link to='/search-room'>방 찾기</Link>
-          </li>
-        </ul>
-      </NavBar>
       {introContent.map((intro, idx) => (
         <IntroArticleContainter key={idx} pageNum={idx}>
           <IntroHeader>

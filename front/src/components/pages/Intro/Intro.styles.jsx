@@ -19,12 +19,14 @@ export const IntroArticleContainter = styled.article`
   height: 100vh;
   width: 100vw;
   ${(pageNum) =>
-    pageNum % 2 === 0
+    pageNum % 2 !== 0
       ? css`
           background: linear-gradient(beige, white);
+          text-align: right;
         `
       : css`
           background: linear-gradient(white, beige);
+          text-align: left;
         `}
 `;
 
