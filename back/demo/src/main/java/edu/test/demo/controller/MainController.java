@@ -12,8 +12,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,14 +40,15 @@ public class MainController {
 	
 	//가입 url 전송
 	@PostMapping("/join/sendURL")
-	public boolean sendURL(String user_email){
+	public String sendURL(@RequestBody Map<String, Object> param){
 		try {
+			String user_email = (String)param.get("user_email");
 			userService.insertTmpUser(user_email);
-			return true;
+			return user_email;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return "false";
 		}
 		
 	}
@@ -99,7 +102,8 @@ public class MainController {
 	
 	//상세회원정보
 	@GetMapping("/userInfo")
-	public JSONObject userInfo(Integer user_id) {
+	public JSONObject userInfo(@RequestParam("user_id")int user_id) {
+		System.out.println("userId="+user_id);
 		UserVO user = userService.selectUserByUserId(user_id);
 		user.setUser_pw("");
 		UserCharacterVO userCharacter = userCharacterService.selectUserCharacterByUserId(user_id);
@@ -107,6 +111,7 @@ public class MainController {
 		hm.put("user", user);
 		hm.put("userCharacter", userCharacter);
 		JSONObject jo = new JSONObject(hm);
+		System.out.println("jo="+jo.toJSONString());
 		return jo;
 	}
 	

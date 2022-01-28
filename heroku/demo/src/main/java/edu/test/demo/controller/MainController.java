@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,14 +38,14 @@ public class MainController {
 	
 	//가입 url 전송
 	@PostMapping("/join/sendURL")
-	public String sendURL(String user_email){
+	public String sendURL(@RequestBody Map<String, Object> param){
 		try {
+			String user_email = (String)param.get("user_email");
 			userService.insertTmpUser(user_email);
 			return "TRUE";
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return user_email;
+			return "FALSE";
 		}
 		
 	}
