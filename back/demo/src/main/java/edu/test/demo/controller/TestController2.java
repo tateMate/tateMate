@@ -190,10 +190,12 @@ public class TestController2 {
 	
 //회원가입
 	@PostMapping("/testJoin")
-	public String testJoin(String email, String verificationCode, Model model) {
-		model.addAttribute("email", email);
-		model.addAttribute("verificationCode", verificationCode);
-		return "main/testJoin";
+	public String testJoin(String email, String verificationCode, HttpSession session, Model model) {
+		if(userService.codeChk(verificationCode, session)) {
+			model.addAttribute("email", email);
+			session.removeAttribute("verificationCode");
+			return "main/testJoin";
+		}else return "main/fail";
 	}
 	@PostMapping("testJoinComplete")
 	public String testJoinComplete(UserVO user, UserCharacterVO userCharacter, HttpServletRequest request, MultipartFile file) {
