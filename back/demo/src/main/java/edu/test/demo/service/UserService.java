@@ -32,7 +32,7 @@ public class UserService {
 	UserCharacterDAO userCharacterDAO;
 	
 //Sending Email Process	
-	public void sendEmail(String user_email, String purpose, String url) throws Exception {
+	public void sendEmail(String user_email, String purpose, String code) throws Exception {
 		File securityFile=new File("C://security.txt");
 		Scanner sc=new Scanner(securityFile);
 		final String FROM=sc.nextLine();
@@ -47,9 +47,10 @@ public class UserService {
 		String body="TATEMATE에 오신것을 환영합니다. 관리자에게 문의를 해주세요.";
 		
 		if(purpose.equals("join")) {
-			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br><a href='"+url+"'>회원가입 완료하러 가기</a>";
+//			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br><a href='"+url+"'>회원가입 완료하러 가기</a>";
+			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br>인증번호 : "+code+"<br><hr>";
 		}else if(purpose.equals("pw")) {
-			body="비밀번호를 잊어버렸을 때 보내는 test용 email입니다.<hr><br><a href='"+url+"'>비밀번호 재설정하러 가기</a>";
+			body="비밀번호를 잊어버렸을 때 보내는 test용 email입니다.<hr><br>인증번호 : "+code+"<br><hr>";
 		}
 		
 		Properties props=System.getProperties();
@@ -117,16 +118,25 @@ public class UserService {
 		return userDAO.insertUser(vo);
 	}
 
+////new join logic
+//	public String insertTmpUser(String user_email) throws Exception {
+//		UserVO vo=new UserVO();
+//		String param = shalize(user_email);
+//		vo.setUser_pw(user_email);
+//		vo.setUser_email(shalize("tatemate"+param));
+//		userDAO.insertTmpUser(vo);
+//		userCharacterDAO.insertUserCharacter(new UserCharacterVO());
+//		sendEmail(user_email, "join", "http://localhost:8080/realjoin?tatemate="+param);
+//		return param;
+//	}
+	
 //new join logic
-	public String insertTmpUser(String user_email) throws Exception {
-		UserVO vo=new UserVO();
-		String param = shalize(user_email);
-		vo.setUser_pw(user_email);
-		vo.setUser_email(shalize("tatemate"+param));
-		userDAO.insertTmpUser(vo);
-		userCharacterDAO.insertUserCharacter(new UserCharacterVO());
-		sendEmail(user_email, "join", "http://localhost:8080/realjoin?tatemate="+param);
-		return param;
+	public String insertTmpUser(String user_email, HttpSession session) throws Exception {
+		int num = new Random().nextInt(1000000);	//	6자리 0~999999
+		String verificationCode = String.format("%06d", num);	//	6자리 맞춰서 0 채우기
+		session.setAttribute("verificationCode", shalize(verificationCode));
+		sendEmail(user_email, "join", verificationCode);
+		return user_email;
 	}
 	
 	public UserVO selectUserByshalizedEmail(String user_email) {
