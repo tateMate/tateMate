@@ -135,6 +135,7 @@ public class UserService {
 		int num = new Random().nextInt(1000000);	//	6자리 0~999999
 		String verificationCode = String.format("%06d", num);	//	6자리 맞춰서 0 채우기
 		session.setAttribute("verificationCode", shalize(verificationCode));
+		session.setAttribute("user_email", user_email);
 		sendEmail(user_email, "join", verificationCode);
 		return user_email;
 	}
@@ -237,6 +238,13 @@ public class UserService {
 		return userDAO.selectUserLogin(id_pass);
 	}
 
+//verificationCode chk
+	public boolean codeChk(String inputCode, HttpSession session) {
+		return ((String)session.getAttribute("verificationCode")).equals(shalize(inputCode))? true:false; 
+	}
+
+	
+	
 //	recommend user mulgae version
 //	no longer used
 	public List<UserVO> rcmdUser(int user_id){		

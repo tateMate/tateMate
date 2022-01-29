@@ -52,20 +52,46 @@ public class MainController {
 //		}
 //		
 //	}
-	//가입 url 전송
+	//가입 code 전송
 	@PostMapping("/join/sendEmail")
 	public String sendEmail(@RequestBody Map<String, Object> param, HttpSession session){
 		try {
 			String user_email = (String)param.get("user_email");
-			userService.insertTmpUser(user_email, session);
+			userService.insertTmpUser(user_email, session);	//	session에 인증번호/email 저장 후 메일 전송
 			return user_email;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "false";
 		}
-		
 	}
+	//인증번호 체크
+	@PostMapping("/join/chkCode")
+	public String chkCode(@RequestBody Map<String, Object> param, HttpSession session) {
+		try {
+			String inputCode = (String)param.get("verificationCode");
+			if(userService.codeChk(inputCode, session)) {
+				session.removeAttribute("verificationCode");
+				return "true";
+			}else return "false";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "false";
+		}
+	}
+	
+//	//가입 url 전송
+//	@PostMapping("/join/sendEmail")
+//	public String sendEmail(@RequestBody Map<String, Object> param, HttpSession session){
+//		try {
+//			String user_email = (String)param.get("user_email");
+//			userService.insertTmpUser(user_email, session);
+//			return user_email;
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return "false";
+//		}
+//	}
 	
 	//회원가입 폼(파리미터로 확인 후, user_id,user_email 등 리턴)			/	나중에 링크에 따라 서비스에서 링크 수정
 	@GetMapping("/join/form")
