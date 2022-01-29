@@ -32,12 +32,9 @@ public class UserService {
 	
 //Sending Email Process	
 	public void sendEmail(String user_email, String purpose, String code) throws Exception {
-		File securityFile=new File("C://security.txt");
-		Scanner sc=new Scanner(securityFile);
-		final String FROM=sc.nextLine();
-		final String SMTP_PASSWORD=sc.nextLine();
+		final String FROM=System.getenv("SC_MAIL_ID");
+		final String SMTP_PASSWORD=System.getenv("SC_MAIL_PW");
 		final String SMTP_USERNAME=FROM;
-		sc.close();
 		final String FROMNAME="TATEMATE";
 		final String HOST="smtp.gmail.com";
 		final int PORT=587;
