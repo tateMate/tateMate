@@ -31,10 +31,13 @@ public class UserService {
 	UserCharacterDAO userCharacterDAO;
 	
 //Sending Email Process	
-	public void sendEmail(String user_email, String purpose, String url) throws Exception {
-		final String FROM=System.getenv("SC_MAIL_ID");
-		final String SMTP_PASSWORD=System.getenv("SC_MAIL_PW");
+	public void sendEmail(String user_email, String purpose, String code) throws Exception {
+		File securityFile=new File("C://security.txt");
+		Scanner sc=new Scanner(securityFile);
+		final String FROM=sc.nextLine();
+		final String SMTP_PASSWORD=sc.nextLine();
 		final String SMTP_USERNAME=FROM;
+		sc.close();
 		final String FROMNAME="TATEMATE";
 		final String HOST="smtp.gmail.com";
 		final int PORT=587;
@@ -43,9 +46,10 @@ public class UserService {
 		String body="TATEMATE에 오신것을 환영합니다. 관리자에게 문의를 해주세요.";
 		
 		if(purpose.equals("join")) {
-			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br><a href='"+url+"'>회원가입 완료하러 가기</a>";
+//			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br><a href='"+url+"'>회원가입 완료하러 가기</a>";
+			body="TATEMATE에 오신것을 환영합니다.<hr>*****join용 test email입니다.*****<hr><br>인증번호 : "+code+"<br><hr>";
 		}else if(purpose.equals("pw")) {
-			body="비밀번호를 잊어버렸을 때 보내는 test용 email입니다.<hr><br><a href='"+url+"'>비밀번호 재설정하러 가기</a>";
+			body="비밀번호를 잊어버렸을 때 보내는 test용 email입니다.<hr><br>인증번호 : "+code+"<br><hr>";
 		}
 		
 		Properties props=System.getProperties();
@@ -107,22 +111,20 @@ public class UserService {
 			//System.out.println(uploadFileName);
 			File destinationFile=new File(fileURL, uploadFileName);
 			file.transferTo(destinationFile);//upload
-			vo.setUser_profile(uploadFileName);
+			vo.setUser_profile(uploadFileName);//upload�� ��θ� vo�� setting
 		}
 		vo.setUser_pw(shalize(vo.getUser_email()+vo.getUser_pw()));
 		return userDAO.insertUser(vo);
 	}
 
+
 //new join logic
-	public String insertTmpUser(String user_email) throws Exception {
-		UserVO vo=new UserVO();
-		String param = shalize(user_email);
-		vo.setUser_pw(user_email);
-		vo.setUser_email(shalize("tatemate"+param));
-		userDAO.insertTmpUser(vo);
-		userCharacterDAO.insertUserCharacter(new UserCharacterVO());
-		sendEmail(user_email, "join", "https://tatemate-back.herokuapp.com/realjoin?tatemate="+param);
-		return param;
+	public String insertTmpUser(String user_email, HttpSession session) throws Exception {
+		int num = new Random().nextInt(1000000);	//	6자리 0~999999
+		String verificationCode = String.format("%06d", num);	//	6자리 맞춰서 0 채우기
+		session.setAttribute("verificationCode", shalize(verificationCode));
+		sendEmail(user_email, "join", verificationCode);
+		return user_email;
 	}
 	
 	public UserVO selectUserByshalizedEmail(String user_email) {
@@ -147,7 +149,7 @@ public class UserService {
 				//System.out.println(uploadFileName);
 				File destinationFile=new File(fileURL, uploadFileName);
 				file.transferTo(destinationFile);//upload
-				userVO.setUser_profile(uploadFileName);
+				userVO.setUser_profile(uploadFileName);//upload�� ��θ� vo�� setting
 			}
 			/*			DB				vo
 			 	email	pw				email		
@@ -164,7 +166,7 @@ public class UserService {
 				//System.out.println(uploadFileName);
 				File destinationFile=new File(fileURL, uploadFileName);
 				file.transferTo(destinationFile);//upload
-				userVO.setUser_profile(uploadFileName);
+				userVO.setUser_profile(uploadFileName);//upload�� ��θ� vo�� setting
 			}
 		}
 		int rst = userDAO.modifyUser(userVO);
@@ -223,6 +225,11 @@ public class UserService {
 		return userDAO.selectUserLogin(id_pass);
 	}
 
+//verificationCode chk
+	public boolean codeChk(String inputCode, HttpSession session) {
+		return ((String)session.getAttribute("verificationCode")).equals(shalize(inputCode))? true:false; 
+	}
+	
 //	recommend user mulgae version
 //	no longer used
 	public List<UserVO> rcmdUser(int user_id){		
@@ -287,7 +294,7 @@ public class UserService {
 		String pw = user.getUser_pw();
 		String time = LocalDateTime.now().toString();
 		String tmpPw = shalize(email+pw+time);									//	tmp password 
-		String pwModifyURL = "https://tatemate-back.herokuapp.com/modifyPw?tmpPw="+tmpPw;		//	URL
+		String pwModifyURL = "http://localhost:8080/modifyPw?tmpPw="+tmpPw;		//	URL
 		Map<String, Object> emailPass = new HashMap<>();						//	map for sqlMapper
 		emailPass.put("user_id", user_id);	
 		emailPass.put("user_email", email);	
@@ -310,7 +317,7 @@ public class UserService {
 		emailPass.put("pw", pw);
 		return userDAO.modifyPw(emailPass);
 	}
-//shalize(SHA256)
+//shalize(SHA256�̿�)
 	private String shalize(String pw) {
 		String sha = null;
 		try {
