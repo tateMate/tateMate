@@ -10,8 +10,13 @@
 	<h1></h1>
 	<hr>
 	<div>
-	${email} 로 비밀번호를 변경할 수 있는 링크를 보냈엉! 확인해라 엉엉!
+	${email} 로 인증번호를 보냈엉! 확인해라 엉엉!
 	<br><mark>${title}</mark>
+	<form action="testJoin" method="post">
+		인증번호 : <input type="text" name="verificationCode">
+				<input type="hidden" name="email" value="${email}">
+				<input type="submit" value="확인">
+	</form>
 	</div>
 	<a href="http://localhost:8080/main">main으로</a>
 	<img

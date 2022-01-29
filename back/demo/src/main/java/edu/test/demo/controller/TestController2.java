@@ -189,6 +189,24 @@ public class TestController2 {
 	}
 	
 //회원가입
+	@PostMapping("/testJoin")
+	public String testJoin(String email, String verificationCode, Model model) {
+		model.addAttribute("email", email);
+		model.addAttribute("verificationCode", verificationCode);
+		return "main/testJoin";
+	}
+	@PostMapping("testJoinComplete")
+	public String testJoinComplete(UserVO user, UserCharacterVO userCharacter, HttpServletRequest request, MultipartFile file) {
+		try {
+			userService.insertUser(user, request, file);
+			userCharacterService.insertUserCharacter(userCharacter);
+			return "main/success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "main/fail";
+		}
+	}
+	
 	@GetMapping("/join")
 	public String UserInsertGet() {
 		return "main/join";
@@ -214,12 +232,12 @@ public class TestController2 {
 	}
 	
 	@PostMapping("/joinmail")
-	public String joinjoin(Model model, String user_email) {
+	public String joinjoin(Model model, String user_email, HttpSession session) {
 		try {
 			model.addAttribute("email", user_email);
 			model.addAttribute("title", "이메일을 확인하여 회원가입을 마쳐주세요");
 			//userVo를 가라로 집어넣는다:pw=useremail,id=set.tmpPW
-			userService.insertTmpUser(user_email);
+			userService.insertTmpUser(user_email, session);
 			return "main/sendmail";
 		} catch (Exception e) {
 			model.addAttribute("msg",e);

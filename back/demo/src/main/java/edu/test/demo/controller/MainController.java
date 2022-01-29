@@ -39,11 +39,25 @@ public class MainController {
 	CocommentService cocommentService;
 	
 	//가입 url 전송
-	@PostMapping("/join/sendURL")
-	public String sendURL(@RequestBody Map<String, Object> param){
+//	@PostMapping("/join/sendURL")
+//	public String sendURL(@RequestBody Map<String, Object> param){
+//		try {
+//			String user_email = (String)param.get("user_email");
+//			userService.insertTmpUser(user_email);
+//			return user_email;
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return "false";
+//		}
+//		
+//	}
+	//가입 url 전송
+	@PostMapping("/join/sendEmail")
+	public String sendEmail(@RequestBody Map<String, Object> param, HttpSession session){
 		try {
 			String user_email = (String)param.get("user_email");
-			userService.insertTmpUser(user_email);
+			userService.insertTmpUser(user_email, session);
 			return user_email;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
