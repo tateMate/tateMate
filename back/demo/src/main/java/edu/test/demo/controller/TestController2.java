@@ -330,14 +330,14 @@ public class TestController2 {
 	
 //비밀번호 찾기 페이지 post
 	@PostMapping("/forgotPw")
-	public String forgotPwPost(String user_email, Model model) {
+	public String forgotPwPost(String user_email, Model model, HttpSession session) {
 		try {
 			UserVO user = userService.selectUserByUserEmail(user_email);
 			if(user==null) {
 				model.addAttribute("msg","존재하지 않는 EMAIL입니다.");
 				return "main/fail";
 			}
-			userService.forgotPw(user.getUser_id());
+			userService.forgotPw(user.getUser_id(), session);
 			model.addAttribute("email", user_email);	// ${email}로 비밀번호를 변경할 수 있는 링크를 보냈엉! 확인해라 엉엉!
 			model.addAttribute("title","비밀번호가 초기화되었으니 반드시 재설정 해주시기 바랍니다.");
 			return "main/sendmail";

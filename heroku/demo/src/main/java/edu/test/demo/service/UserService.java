@@ -284,21 +284,17 @@ public class UserService {
 		return rcmdUserList;
 	}
 	
-// pw change & return tmpPw (int user_id)
-	public void forgotPw(int user_id) throws Exception {
+// send verificationCode for pw 
+	public void forgotPw(int user_id, HttpSession session) throws Exception {
+		int num = new Random().nextInt(1000000);	//	6자리 0~999999
+		String verificationCode = String.format("%06d", num);	//	6자리 맞춰서 0 채우기
 		UserVO user = selectUserByUserId(user_id);
 		String email = user.getUser_email();
-		String pw = user.getUser_pw();
-		String time = LocalDateTime.now().toString();
-		String tmpPw = shalize(email+pw+time);									//	tmp password 
-		String pwModifyURL = "http://localhost:8080/modifyPw?tmpPw="+tmpPw;		//	URL
-		Map<String, Object> emailPass = new HashMap<>();						//	map for sqlMapper
-		emailPass.put("user_id", user_id);	
-		emailPass.put("user_email", email);	
-		emailPass.put("pw", shalize("tateMate"+tmpPw));							
-		userDAO.modifyPw(emailPass);											//	modify password tateMate + tmp password
-		sendEmail(email, "pw" , pwModifyURL);											// send email.
-	}
+		session.setAttribute("verificationCode", shalize(verificationCode));
+		session.setAttribute("user_email", email);
+		sendEmail(email, "pw" , verificationCode);											// send email.
+	}	
+
 // userVO by pw
 	public UserVO selectUserByUserPw(String user_pw) {
 		String pw = shalize("tateMate"+user_pw);
